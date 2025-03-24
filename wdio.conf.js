@@ -1,35 +1,31 @@
-export const config = {
-    // ==================
-    // Basic Configuration
-    // ==================
+const { AfterAll, After } = require("@wdio/cucumber-framework");
+
+exports.config = {
     runner: 'local',
     path: '/',
     specs: [
-        './features/**/*.feature'  // Path to your feature files
+        './features/**/*.feature'  
     ],
     exclude: [],
-    maxInstances: 1,
+    maxInstances: 2,
     capabilities: [{
         browserName: 'chrome',
         'goog:chromeOptions': {
-            args: ['--headless', '--disable-gpu', '--window-size=1920,1080'] // Headless mode for CI
+            args: ['--window-size=1920,1080'] 
         }
     }],
     logLevel: 'info',
     bail: 0,
-    baseUrl: 'https://store.steampowered.com/',
-    waitforTimeout: 10000,
+    baseUrl: 'https://userinyerface.com/',
+    waitforTimeout: 12000,
     connectionRetryTimeout: 90000,
     connectionRetryCount: 3,
     
-    // ==================
-    // Test Framework Settings
-    // ==================
     framework: 'cucumber',
     reporters: ['spec'],
     
     cucumberOpts: {
-        require: ['./step-definitions/**/*.js'], // Path to step definitions
+        require: ['./step-definitions/**/*.js'], 
         backtrace: false,
         requireModule: [],
         dryRun: false,
@@ -47,6 +43,11 @@ export const config = {
     services: ['chromedriver'],
 
     beforeScenario: async () => {
+        await browser.url('/');
         await browser.maximizeWindow();
+    },
+
+    AfterAll: async () => {
+        await browser.deleteSession();
     }
 };
