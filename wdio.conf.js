@@ -22,7 +22,13 @@ exports.config = {
     connectionRetryCount: 3,
     
     framework: 'cucumber',
-    reporters: ['spec'],
+    reporters: ['spec',
+        ['allure', {
+            outputDir: './allure-results', 
+            disableWebdriverStepsReporting: false,  
+            disableWebdriverScreenshotsReporting: false 
+        }]
+    ],
     
     cucumberOpts: {
         require: ['./step-definitions/**/*.js'], 
