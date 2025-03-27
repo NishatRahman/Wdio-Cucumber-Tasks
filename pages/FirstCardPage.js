@@ -26,19 +26,56 @@ class FirstCardPage extends BasePage {
         return text.charAt(0);
     }
 
-    async inputValidPassword(password) {
+    async generatePassword() {
+        const lowerChars = 'abcdefghijklmnopqrstuvwxyz';
+        const upperChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const digits = '0123456789';
+        const allChars = lowerChars + upperChars + digits;
+    
+        const randomUpper = upperChars.charAt(Math.floor(Math.random() * upperChars.length));
+        const randomDigit = digits.charAt(Math.floor(Math.random() * digits.length));
+    
+        let password = '';
+        while (password.length < 8) {
+            password += allChars.charAt(Math.floor(Math.random() * allChars.length));
+        }
+    
+        const randomUpperIndex = Math.floor(Math.random() * password.length);
+        const randomDigitIndex = Math.floor(Math.random() * password.length);
+    
+        password = password.slice(0, randomUpperIndex) + randomUpper + password.slice(randomUpperIndex);
+        password = password.slice(0, randomDigitIndex) + randomDigit + password.slice(randomDigitIndex);
+    
+        return password;
+    }    
+
+    async inputRandomPassword() {
+        const password = await this.generatePassword();
         await this.#passwordInput.typeTextWithClear(password);
     }
 
-    async inputValidEmail(email) {
+    async generateRandomString() {
+        const lowerChars = 'abcdefghijklmnopqrstuvwxyz';
+        let randomString = '';
+        
+        for (let i = 0; i < 5; i++) {
+            randomString += lowerChars.charAt(Math.floor(Math.random() * lowerChars.length));
+        }
+    
+        return randomString;
+    }
+
+    async inputRandomEmail() {
+        const email = await this.generateRandomString();
         await this.#emailInput.typeTextWithClear(email);
     }
 
-    async inputDomainName(domain) {
+    async inputRandomDomainName() {
+        const domain = await this.generateRandomString();
         await this.#domainInput.typeTextWithClear(domain);
     }
 
-    async chooseDomain() {
+    async chooseRandomDomain() {
         await this.#dropdown.click();
         const items = await this.#dropdownList.getListOfElements();
         if (items.length === 0) {

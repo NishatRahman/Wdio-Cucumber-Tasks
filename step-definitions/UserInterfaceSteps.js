@@ -13,7 +13,7 @@ When(/^I click the link to next page$/, async () => {
     await homePage.clickLink();
 });
 
-Then(/^Card (\d+) is open$/, async (card) => {
+Then(/^Card "?(\d+)"? is open$/, async (card) => {
     if (card === 1) {
         await firstCardPage.isPageOpened();
         assert.strictEqual(await firstCardPage.isRightCardOpen(), card.toString(), 'Card 1 is not open');
@@ -26,20 +26,20 @@ Then(/^Card (\d+) is open$/, async (card) => {
     }
 });
 
-When(/^I input (.+), (.+), (.+) and accept the terms of use and click next button$/, 
-    async (password, email, domainName) => {
-    await firstCardPage.inputValidPassword(password);
-    await firstCardPage.inputValidEmail(email);
-    await firstCardPage.inputDomainName(domainName);
-    await firstCardPage.chooseDomain();
+When(/^I input random valid password, email, domain and accept the terms of use and click next button$/, 
+    async () => {
+    await firstCardPage.inputRandomPassword();
+    await firstCardPage.inputRandomEmail();
+    await firstCardPage.inputRandomDomainName();
+    await firstCardPage.chooseRandomDomain();
     await firstCardPage.acceptTermsOfUse();
     await firstCardPage.clickNextButton();
 });
 
-When(/^I choose 2 interests, upload image and click next button$/, async () => {
+When(/^I choose "?(\d+)"? random interests, upload image and click next button$/, async (num) => {
     await secondCardPage.uploadImage('resources/demo.jpg');
     await secondCardPage.unselectAllInterests();
-    await secondCardPage.chooseInterest();
+    await secondCardPage.chooseRandomInterests(num);
     await secondCardPage.clickNextButton();
 });
 
@@ -61,8 +61,9 @@ Then(/^Form is closed$/, async () => {
     assert.isTrue(await firstCardPage.checkCookiesAreAccepted(), 'Form is not closed');
 });
 
-Then(/^Timer starts from (\d{2}):(\d{2}):(\d{2})$/, async (hh, mm, ss) => {
+Then(/^Timer starts from "(\d{2}):(\d{2}):(\d{2})"$/, async (hh, mm, ss) => {
     await homePage.clickLink();
     const timerValue = await firstCardPage.getTimerValue();
-    assert.strictEqual(timerValue, `${hh}:${mm}:${ss}`, 'Timer does not start from 00:00:00');
+    const expectedTime = `${hh}:${mm}:${ss}`;
+    assert.strictEqual(timerValue, expectedTime, `Expected timer to start from ${expectedTime}, but got ${timerValue}`);
 });
