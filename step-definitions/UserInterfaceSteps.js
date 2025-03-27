@@ -36,7 +36,7 @@ When(/^I input (.+), (.+), (.+) and accept the terms of use and click next butto
     await firstCardPage.clickNextButton();
 });
 
-When(/^I choose 2 random interests, upload image and click next button$/, async () => {
+When(/^I choose 2 interests, upload image and click next button$/, async () => {
     await secondCardPage.uploadImage('resources/demo.jpg');
     await secondCardPage.unselectAllInterests();
     await secondCardPage.chooseInterest();
