@@ -4,7 +4,7 @@ Feature: User Interface Test
 		Given I navigate to home page
 		When I click the link to next page
 		Then Card 1 is open
-		When I input Password123, abcd, gmail and accept the terms of use and click next button
+		When I input "Password123", "abcd", "gmail" and accept the terms of use and click next button
 		Then Card 2 is open
 		When I choose 2 random interests, upload image and click next button
 		Then Card 3 is open

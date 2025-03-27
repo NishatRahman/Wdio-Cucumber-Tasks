@@ -2,6 +2,7 @@ import BasePage from './BasePage';
 import { Label } from '../framework/elements/Label';
 import { Input } from '../framework/elements/Input';
 import { Button } from '../framework/elements/Button';
+import { ElementsList } from '../framework/elements/ElementsList';
 
 class FirstCardPage extends BasePage {
     #card = new Label('//div[@class="page-indicator"]', 'Card 1');
@@ -9,7 +10,7 @@ class FirstCardPage extends BasePage {
     #emailInput = new Input('//input[@placeholder="Your email"]', 'Email');
     #domainInput = new Input('//input[@placeholder="Domain"]', 'Domain');
     #dropdown = new Button('.dropdown__field', 'Dropdown');
-    #dropdownList = new Button('//div[@class="dropdown__list-item"][1]', 'Dropdown List');
+    #dropdownList = new ElementsList(Button, "//div[@class='dropdown__list-item']", "Dropdown Items");
     #checkbox = new Label('.checkbox__label', 'Checkbox');
     #nextButton = new Button('.button--secondary', 'Next Button');
     #helpButton = new Button('//span[contains(text(), "Send")]', 'Help Button');
@@ -25,21 +26,26 @@ class FirstCardPage extends BasePage {
         return text.charAt(0);
     }
 
-    async inputRandomValidPassword(password) {
+    async inputValidPassword(password) {
         await this.#passwordInput.typeTextWithClear(password);
     }
 
-    async inputRandomValidEmail(email) {
+    async inputValidEmail(email) {
         await this.#emailInput.typeTextWithClear(email);
     }
 
-    async inputRandomDomainName(domain) {
+    async inputDomainName(domain) {
         await this.#domainInput.typeTextWithClear(domain);
     }
 
-    async chooseRandomDomain() {
+    async chooseDomain() {
         await this.#dropdown.click();
-        await this.#dropdownList.click();
+        const items = await this.#dropdownList.getListOfElements();
+        if (items.length === 0) {
+            throw new Error("No dropdown items found!");
+        }
+        const randomIndex = Math.floor(Math.random() * items.length);
+        await items[randomIndex].click();
     }
 
     async acceptTermsOfUse() {
@@ -55,15 +61,15 @@ class FirstCardPage extends BasePage {
         await this.#helpButton.click();
     }
 
-    async checkHelpFormIsHidden() {
+    async isHelpFormHidden() {
         await browser.waitUntil(
-            async () => (await this.#helpButton.state().isDisplayed()), 
+            async () => (await this.#helpButton.state().isDisplayed()),
             {
-                timeout: 15000, 
+                timeout: 15000,
                 timeoutMsg: 'Help form is still visible after waiting for 15 seconds'
             }
         );
-        return true; 
+        return true;
     }
 
     async acceptCookies() {

@@ -28,17 +28,15 @@ Then(/^Card (\d+) is open$/, async (card) => {
 
 When(/^I input (.+), (.+), (.+) and accept the terms of use and click next button$/, 
     async (password, email, domainName) => {
-    await firstCardPage.inputRandomValidPassword(password);
-    await firstCardPage.inputRandomValidEmail(email);
-    await firstCardPage.inputRandomDomainName(domainName);
-    await firstCardPage.chooseRandomDomain();
+    await firstCardPage.inputValidPassword(password);
+    await firstCardPage.inputValidEmail(email);
+    await firstCardPage.inputDomainName(domainName);
+    await firstCardPage.chooseDomain();
     await firstCardPage.acceptTermsOfUse();
     await firstCardPage.clickNextButton();
 });
 
-
-
-When(/^I choose (\d+) random interests, upload image and click next button$/, async () => {
+When(/^I choose 2 random interests, upload image and click next button$/, async () => {
     await secondCardPage.uploadImage('resources/demo.jpg');
     await secondCardPage.unselectAllInterests();
     await secondCardPage.chooseInterest();
@@ -51,7 +49,7 @@ When(/^I hide help form$/, async () => {
 });
 
 Then(/^Form content is hidden$/, async () => {
-    assert.isTrue(await firstCardPage.checkHelpFormIsHidden(), 'Form content is not hidden');
+    assert.isTrue(await firstCardPage.isHelpFormHidden(), 'Form content is not hidden');
 });
 
 When(/^I accept cookies$/, async () => {

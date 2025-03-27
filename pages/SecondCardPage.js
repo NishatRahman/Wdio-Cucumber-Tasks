@@ -1,6 +1,5 @@
 import BasePage from './BasePage';
 import { Label } from '../framework/elements/Label';
-import { Input } from '../framework/elements/Input';
 import { Checkbox } from '../framework/elements/Checkbox';
 import { Button } from '../framework/elements/Button';
 import { FileUploader } from '../framework/elements/FileUploader';
