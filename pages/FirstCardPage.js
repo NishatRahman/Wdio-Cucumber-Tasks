@@ -1,0 +1,127 @@
+import BasePage from './BasePage';
+import { Label } from '../framework/elements/Label';
+import { Input } from '../framework/elements/Input';
+import { Button } from '../framework/elements/Button';
+import { ElementsList } from '../framework/elements/ElementsList';
+
+class FirstCardPage extends BasePage {
+    #card = new Label('//div[@class="page-indicator"]', 'Card 1');
+    #passwordInput = new Input('//input[@placeholder="Choose Password"]', 'Password');
+    #emailInput = new Input('//input[@placeholder="Your email"]', 'Email');
+    #domainInput = new Input('//input[@placeholder="Domain"]', 'Domain');
+    #dropdown = new Button('.dropdown__field', 'Dropdown');
+    #dropdownList = new ElementsList(Button, "//div[@class='dropdown__list-item']", "Dropdown Items");
+    #checkbox = new Label('.checkbox__label', 'Checkbox');
+    #nextButton = new Button('.button--secondary', 'Next Button');
+    #helpButton = new Button('//span[contains(text(), "Send")]', 'Help Button');
+    #acceptCookiesButton = new Button('//button[contains(text(), "Not really")]', 'Accept Cookies');
+    #timer = new Label('//div[@class="timer timer--white timer--center"]', 'Timer');
+
+    constructor() {
+        super('//div[@class="login-form"]', 'First Card Page');
+    }
+
+    async isRightCardOpen() {
+        const text = await this.#card.getText();
+        return text.charAt(0);
+    }
+
+    async generatePassword() {
+        const lowerChars = 'abcdefghijklmnopqrstuvwxyz';
+        const upperChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const digits = '0123456789';
+        const allChars = lowerChars + upperChars + digits;
+    
+        const randomUpper = upperChars.charAt(Math.floor(Math.random() * upperChars.length));
+        const randomDigit = digits.charAt(Math.floor(Math.random() * digits.length));
+    
+        let password = '';
+        const letterLength = 8;
+        while (password.length < letterLength) {
+            password += allChars.charAt(Math.floor(Math.random() * allChars.length));
+        }
+    
+        const randomUpperIndex = Math.floor(Math.random() * password.length);
+        const randomDigitIndex = Math.floor(Math.random() * password.length);
+    
+        password = password.slice(0, randomUpperIndex) + randomUpper + password.slice(randomUpperIndex);
+        password = password.slice(0, randomDigitIndex) + randomDigit + password.slice(randomDigitIndex);
+    
+        return password;
+    }    
+
+    async inputRandomPassword() {
+        const password = await this.generatePassword();
+        await this.#passwordInput.typeTextWithClear(password);
+    }
+
+    async generateRandomString() {
+        const lowerChars = 'abcdefghijklmnopqrstuvwxyz';
+        let randomString = '';
+        const stringLength = 5;
+        for (let i = 0; i < stringLength; i++) {
+            randomString += lowerChars.charAt(Math.floor(Math.random() * lowerChars.length));
+        }   
+        return randomString;
+    }
+
+    async inputRandomEmail() {
+        const email = await this.generateRandomString();
+        await this.#emailInput.typeTextWithClear(email);
+    }
+
+    async inputRandomDomainName() {
+        const domain = await this.generateRandomString();
+        await this.#domainInput.typeTextWithClear(domain);
+    }
+
+    async chooseRandomDomain() {
+        await this.#dropdown.click();
+        const items = await this.#dropdownList.getListOfElements();
+        if (items.length === 0) {
+            throw new Error("No dropdown items found!");
+        }
+        const randomIndex = Math.floor(Math.random() * items.length);
+        await items[randomIndex].click();
+    }
+
+    async acceptTermsOfUse() {
+        await this.#checkbox.click();
+    }
+
+    async clickNextButton() {
+        await this.#nextButton.state().waitForClickable();
+        await this.#nextButton.click();
+    }
+
+    async hideHelpForm() {
+        await this.#helpButton.click();
+    }
+
+    async isHelpFormHidden() {
+        await browser.waitUntil(
+            async () => (await this.#helpButton.state().isDisplayed()),
+            {
+                timeout: 15000,
+                timeoutMsg: 'Help form is still visible after waiting for 15 seconds'
+            }
+        );
+        return true;
+    }
+
+    async acceptCookies() {
+        await this.#acceptCookiesButton.state().waitForDisplayed();
+        await this.#acceptCookiesButton.click();
+    }
+
+    async checkCookiesAreAccepted() {
+        return (!await this.#acceptCookiesButton.state().isDisplayed());
+    }
+
+    async getTimerValue() {
+        await this.#timer.state().waitForDisplayed();
+        return await this.#timer.getText();
+    }
+}
+
+export default new FirstCardPage();
