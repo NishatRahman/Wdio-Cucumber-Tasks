@@ -36,7 +36,8 @@ class FirstCardPage extends BasePage {
         const randomDigit = digits.charAt(Math.floor(Math.random() * digits.length));
     
         let password = '';
-        while (password.length < 8) {
+        const letterLength = 8;
+        while (password.length < letterLength) {
             password += allChars.charAt(Math.floor(Math.random() * allChars.length));
         }
     
@@ -57,11 +58,10 @@ class FirstCardPage extends BasePage {
     async generateRandomString() {
         const lowerChars = 'abcdefghijklmnopqrstuvwxyz';
         let randomString = '';
-        
-        for (let i = 0; i < 5; i++) {
+        const stringLength = 5;
+        for (let i = 0; i < stringLength; i++) {
             randomString += lowerChars.charAt(Math.floor(Math.random() * lowerChars.length));
-        }
-    
+        }   
         return randomString;
     }
 
